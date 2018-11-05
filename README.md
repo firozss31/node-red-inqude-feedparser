@@ -1,7 +1,6 @@
-# node-red-contrib-wago
-[Node-RED](http://nodered.org/) nodes to easily map WAGO 750-49X Power Measurement Modules.
+# node-red-inqude-feedparser
 
-A Bunch Of Text
+A Custom node that parse rss or api feed and generate tree view structure, from which you can specify the data existence path in json tree. Parser will data massage according to the tree specified and result in json object.
 
 ##Example
 ![Example](https://i.imgur.com/151AMum.png)
