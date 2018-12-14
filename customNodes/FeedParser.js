@@ -15,6 +15,8 @@ module.exports = function(RED) {
               inputData[0] = inputData[0].split('[')[1];
               inputData[inputData.length-1] = inputData[inputData.length-1].split(']')[0];
 
+            console.log('config data ', config);
+
           var temp = {
             title:  config.title,
             link:  config.link,
@@ -46,6 +48,11 @@ module.exports = function(RED) {
           var value = {};
           for(var a in temp){
             value[a]  = parse([item].concat(temp[a]), allItems);
+            if(config.changeType && config.changeType == a && config.searchFor && config.replaceWith) {
+              if(value[a].includes(config.searchFor)) {
+                value[a] = value[a].replace(config.searchFor, config.replaceWith);
+              }
+            }
           }
           resultData.push(value);
         }

@@ -1,169 +1,201 @@
 <link href="node_modules/json-path-picker/lib/json-path-picker.css" rel="stylesheet" />
 <style>
-.modal-backdrop {
-  z-index: -1;
-}
-.modal-body {
+  .modal-backdrop {
+    z-index: -1;
+  }
+
+  .modal-body {
     position: relative;
     max-height: 350px;
     padding: 15px;
     overflow-y: auto;
-}
+  }
 </style>
 <script type="text/javascript">
-
-
-    RED.nodes.registerType('Feed Parser',{
-        category: 'Inqude',
-        color: '#19D5DE',
-        icon: 'face.png',
-        defaults: {
-          name: {value:""},
-          data: {value:""},
-          title: {value:""},
-          link: {value:""},
-          image: {value:""},
-          category: {value:""}
-        },
-        inputs:1,
-        outputs:1,
-        label: function() {
-            return this.name||"Feed Parser";
-        }
-    });
+  RED.nodes.registerType('Feed Parser', {
+    category: 'Inqude',
+    color: '#19D5DE',
+    icon: 'face.png',
+    defaults: {
+      name: {
+        value: ""
+      },
+      data: {
+        value: ""
+      },
+      title: {
+        value: ""
+      },
+      link: {
+        value: ""
+      },
+      image: {
+        value: ""
+      },
+      category: {
+        value: ""
+      },
+      changeType: {
+        value: "title"
+      },
+      searchFor: {
+        value: ""
+      },
+      replaceWith: {
+        value: ""
+      }
+    },
+    inputs: 1,
+    outputs: 1,
+    label: function() {
+      return this.name || "Feed Parser";
+    }
+  });
 </script>
 
 <script type="text/javascript">
+  var pathValue = '';
 
-var pathValue = '';
+  function getPath(id) {
+    pathValue = id;
+  }
 
-function getPath(id) {
-  pathValue = id;
-}
+  function setPath() {
+    document.getElementById(pathValue).value = document.getElementById('path').value;
+  }
 
-function setPath() {
-  document.getElementById(pathValue).value = document.getElementById('path').value;
-}
-
-function validate(id, btn_id) {
-  if(!document.getElementById(id).value) {
+  function validate(id, btn_id) {
+    if (!document.getElementById(id).value) {
       document.getElementById(btn_id).disabled = true;
-  } else {
-     document.getElementById(btn_id).disabled = false;
-   }
-}
+    } else {
+      document.getElementById(btn_id).disabled = false;
+    }
+  }
 
   function parseDate() {
 
     $.getScript('node_modules/json-path-picker/lib/json-path-picker.js')
-    .done(function( script, textStatus ) {
-      console.log( textStatus );
+      .done(function(script, textStatus) {
+        console.log(textStatus);
 
-      var data = {};
+        var data = {};
 
-      var dataStr = document.getElementById('node-input-json').value;
-      try {
-        var data = JSON.parse(dataStr);
-      } catch (e) {}
+        var dataStr = document.getElementById('node-input-json').value;
+        try {
+          var data = JSON.parse(dataStr);
+        } catch (e) {}
 
-      var options = {
-        outputCollapsed: true,
-        pathNotation: 'brackets',
-        pathQuotesType: 'none'
-      };
+        var options = {
+          outputCollapsed: true,
+          pathNotation: 'brackets',
+          pathQuotesType: 'none'
+        };
 
-      $('#json-renderer').jsonPathPicker(data, '#path', options);
+        $('#json-renderer').jsonPathPicker(data, '#path', options);
 
-    })
-    .fail(function( jqxhr, settings, exception ) {
-      console.log( 'err ', exception );
-    });
+      })
+      .fail(function(jqxhr, settings, exception) {
+        console.log('err ', exception);
+      });
   }
-
 </script>
 
 <script type="text/x-red" data-template-name="Feed Parser">
 
-<div class="container">
+  <div class="container">
 
-  <div class="form-row">
+    <div class="form-row">
       <label> Sample Json data</label>
-      <textarea  rows="3" class="form-control" id="node-input-json" onkeyup="validate('node-input-json', 'generate_tree')" style="min-width: 650px"></textarea>
+      <textarea rows="3" class="form-control" id="node-input-json" onkeyup="validate('node-input-json', 'generate_tree')" style="min-width: 650px"></textarea>
       <span class="input-group-btn">
         <button type="button" class="btn btn-info btn-lg" id="generate_tree" onclick="parseDate()" >Parse</button>
       </span>
-  </div>
+    </div>
 
-<hr/>
+    <hr/>
 
- <div class="form-row">
-     <label for="node-input-title"> Data</label>
-     <input type="text" id="node-input-data" placeholder="Data" disabled>
-     <span class="input-group-btn">
+    <div class="form-row">
+      <label for="node-input-title"> Data</label>
+      <input type="text" id="node-input-data" placeholder="Data" disabled>
+      <span class="input-group-btn">
       <button type="button" class="btn btn-info btn-lg" data-toggle="modal" onclick="getPath('node-input-data')" data-target="#myModal" >Add</button>
      </span>
- </div>
- <div class="form-row">
-     <label for="node-input-title"> Title</label>
-     <input type="text" id="node-input-title" placeholder="Title" disabled>
-     <span class="input-group-btn">
+    </div>
+    <div class="form-row">
+      <label for="node-input-title"> Title</label>
+      <input type="text" id="node-input-title" placeholder="Title" disabled>
+      <span class="input-group-btn">
       <button type="button" class="btn btn-info btn-lg" data-toggle="modal" onclick="getPath('node-input-title')" data-target="#myModal" >Add</button>
      </span>
- </div>
- <div class="form-row">
-     <label for="node-input-link"> Link</label>
-     <input type="text" id="node-input-link" placeholder="Link" disabled>
-     <span class="input-group-btn">
+    </div>
+    <div class="form-row">
+      <label for="node-input-link"> Link</label>
+      <input type="text" id="node-input-link" placeholder="Link" disabled>
+      <span class="input-group-btn">
       <button type="button" class="btn btn-info btn-lg" data-toggle="modal" onclick="getPath('node-input-link')" data-target="#myModal" >Add</button>
      </span>
- </div>
- <div class="form-row">
-     <label for="node-input-image"> Image</label>
-     <input type="text" id="node-input-image" placeholder="Image" disabled>
-     <span class="input-group-btn">
+    </div>
+    <div class="form-row">
+      <label for="node-input-image"> Image</label>
+      <input type="text" id="node-input-image" placeholder="Image" disabled>
+      <span class="input-group-btn">
       <button type="button" class="btn btn-info btn-lg" data-toggle="modal" onclick="getPath('node-input-image')" data-target="#myModal" >Add</button>
      </span>
- </div>
- <div class="form-row">
-     <label for="node-input-category"> Category</label>
-     <input type="text" id="node-input-category" placeholder="Category" disabled>
-     <span class="input-group-btn">
+    </div>
+    <div class="form-row">
+      <label for="node-input-category"> Category</label>
+      <input type="text" id="node-input-category" placeholder="Category" disabled>
+      <span class="input-group-btn">
       <button type="button" class="btn btn-info btn-lg" data-toggle="modal" onclick="getPath('node-input-category')" data-target="#myModal" >Add</button>
      </span>
- </div>
+    </div>
+    <div class="form-row">
+      <label for="node-input-category"> Change </label>
+      <select id="node-input-changeType">
+        <option value="title">Title</option>
+        <option value="link">Link</option>
+        <option value="image">Image</option>
+        <option value="category">Category</option>
+        </select>
+        <span class="input-group-btn">
+        <input type="text" style="width:25%" id="node-input-searchFor" placeholder="Search for">
+        <input type="text" style="width:25%" id="node-input-replaceWith" placeholder="Replace with">
+       </span>
+    </div>
 
-  <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+      <div class="modal-dialog">
 
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Json Tree view</h4>
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Json Tree view</h4>
 
-          <div class="form-row">
+            <div class="form-row">
               <input type="text" id="path" disabled>
+            </div>
+          </div>
+          <div class="modal-body">
+            <pre id="json-renderer"></pre>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-success btn-lg" onclick="setPath()" data-dismiss="modal">Select</button>
           </div>
         </div>
-        <div class="modal-body">
-          <pre id="json-renderer"></pre>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-success btn-lg" onclick="setPath()" data-dismiss="modal">Select</button>
-        </div>
+
       </div>
-
     </div>
-  </div>
 
-</div>
+  </div>
 
 
 </script>
- 
+
+
 <script type="text/x-red" data-help-name="Feed Parser">
-    <p>A Custom node that parse rss or api feed and generate tree view structure, from which you can specify the data existence path in json tree. Parser will data massage according to the tree specified and result in json object.<br/>
-    </p>
+  <p>A Custom node that parse rss or api feed and generate tree view structure, from which you can specify the data existence path in json tree. Parser will data massage according to the tree specified and result in json object.<br/>
+  </p>
 </script>
