@@ -43,7 +43,10 @@
       },
       replaceWith: {
         value: ""
-      }
+      },
+      extractImage: {
+        value: "no"
+      },
     },
     inputs: 1,
     outputs: 1,
@@ -55,6 +58,8 @@
 
 <script type="text/javascript">
   var pathValue = '';
+
+
 
   function getPath(id) {
     pathValue = id;
@@ -161,6 +166,13 @@
         <input type="text" style="width:25%" id="node-input-searchFor" placeholder="Search for">
         <input type="text" style="width:25%" id="node-input-replaceWith" placeholder="Replace with">
        </span>
+    </div>
+    <div class="form-row">
+      <label for="node-input-category"> Extract Image </label>
+      <select id="node-input-extractImage">
+        <option value="no">No</option>
+        <option value="yes">Yes</option>
+      </select>
     </div>
 
     <!-- Modal -->

@@ -1,3 +1,9 @@
+try {
+  var cheerio = require('cheerio');
+} catch (e) {
+  console.log('error in require ');
+  console.log(e);
+}
 module.exports = function(RED) {
 
     function feedParser(config) {
@@ -14,8 +20,6 @@ module.exports = function(RED) {
               inputData = inputData.split('][');
               inputData[0] = inputData[0].split('[')[1];
               inputData[inputData.length-1] = inputData[inputData.length-1].split(']')[0];
-
-            console.log('config data ', config);
 
           var temp = {
             title:  config.title,
@@ -48,9 +52,20 @@ module.exports = function(RED) {
           var value = {};
           for(var a in temp){
             value[a]  = parse([item].concat(temp[a]), allItems);
+
             if(config.changeType && config.changeType == a && config.searchFor && config.replaceWith) {
               if(value[a].includes(config.searchFor)) {
                 value[a] = value[a].replace(config.searchFor, config.replaceWith);
+              }
+            }
+            if(a == 'image' && config.extractImage == 'yes'){
+              const $ = cheerio.load(JSON.stringify(value[a]));
+              var imageSrc = ($('img').attr('src')).replace(/\\/g, '');
+              try {
+                imageSrc = JSON.parse(imageSrc);
+              } catch (e) {
+              } finally {
+                value[a] = imageSrc;
               }
             }
           }
