@@ -25,14 +25,18 @@ module.exports = function(RED) {
             title:  config.title,
             link:  config.link,
             image:  config.image,
+            image2:  config.image2 || '',
+            image3:  config.image3 || '',
             category: config.category
           }
 
         for(var item in temp) {
-          var first = temp[item].split('][');
-              first[0] = first[0].split('[')[1];
-              first[first.length-1] = first[first.length-1].split(']')[0];
-              temp[item] = first;
+          if(temp[item] && temp[item].length){
+            var first = temp[item].split('][');
+                first[0] = first[0].split('[')[1];
+                first[first.length-1] = first[first.length-1].split(']')[0];
+                temp[item] = first;
+          }
         }
 
         for(var i in temp) {
@@ -51,7 +55,11 @@ module.exports = function(RED) {
         for(var item in allItems) {
           var value = {};
           for(var a in temp){
-            value[a]  = parse([item].concat(temp[a]), allItems);
+            if(temp[a] && temp[a].length){
+              value[a]  = parse([item].concat(temp[a]), allItems);
+            } else {
+              value[a] = ''
+            }
 
             if(config.changeType && config.changeType == a && config.searchFor && config.replaceWith) {
               if(value[a].includes(config.searchFor)) {
