@@ -28,9 +28,9 @@ module.exports = function(RED) {
         image2: config.image2 || '',
         image3: config.image3 || '',
         category: config.category,
-        customProperty1: config.customProperty1 || '',
-        customProperty2: config.customProperty2 || '',
-        customProperty3: config.customProperty3 || '',
+        custom1: config.custom1 || '',
+        custom2: config.custom2 || '',
+        custom3: config.custom3 || '',
       }
 
       for (var item in temp) {
